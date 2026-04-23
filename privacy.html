@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoCentral Privacy Policy</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #333;
+        }
+        h1 { color: #1a1a1a; }
+        h2 { color: #2a2a2a; margin-top: 30px; }
+        h3 { color: #444; margin-top: 20px; }
+        .highlight {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 12px 16px;
+            margin: 20px 0;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        ul {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>NoCentral Privacy Policy</h1>
+
+<p><strong>Effective Date:</strong> April 14, 2026<br>
+<strong>Last Updated:</strong> April 22, 2026</p>
+
+<div class="highlight">
+    <strong>Summary:</strong> NoCentral does not collect or transmit any of your personal data or network information. On iOS, and in some configurations on Apple Silicon Macs, the app may request your device location to center the map feature (optional, never stored or transmitted). The app downloads public IEEE manufacturer databases for device identification, and fetches an AP compatibility matrix from this support site to keep hardware compatibility data current. Everything else stays on your device and your local network.
+</div>
+
+<h2>Information Collection and Use</h2>
+
+<h3>What We Don't Collect</h3>
+<p>NoCentral does not collect, transmit, store, or process any of the following:</p>
+<ul>
+    <li>Personal information (name, email, phone number, etc.)</li>
+    <li>Network credentials or passwords (except locally in your device's Keychain)</li>
+    <li>MAC addresses from your network</li>
+    <li>Network topology or configuration data</li>
+    <li>Client device information from your network</li>
+    <li>Usage statistics or analytics</li>
+    <li>Crash reports or diagnostics</li>
+    <li>Device identifiers</li>
+</ul>
+
+<h3>What Is Stored Locally (On Your Device Only)</h3>
+<p>The following data is stored exclusively on your iOS/macOS device:</p>
+<ul>
+    <li><strong>Site configurations:</strong> Virtual Controller IP addresses, site names, usernames, and site icons/categories (Home, Office, Campus, etc.)</li>
+    <li><strong>Credentials:</strong> Passwords stored securely in the system Keychain using Apple's Keychain Services</li>
+    <li><strong>App preferences:</strong> Display settings including:
+        <ul>
+            <li>Color palette selection (Default, Color Blind, High Contrast)</li>
+            <li>Font size preference</li>
+            <li>Per-site settings (RF RSSI cutoff threshold, retry rate cutoff percentage)</li>
+        </ul>
+    </li>
+    <li><strong>User-entered AP placement data:</strong>
+        <ul>
+            <li>AP coordinates (latitude/longitude) — <strong>only if you manually place APs using the map feature</strong></li>
+            <li>Calculated center point of all placed APs (used for RF propagation visualization)</li>
+            <li>This location data is optional, user-entered, stored only on your device, and never transmitted anywhere</li>
+        </ul>
+    </li>
+    <li><strong>Performance cache data:</strong> Cached network information for faster loading, including:
+        <ul>
+            <li>Firmware version (derived from Virtual Controller)</li>
+            <li>Last connection timestamp</li>
+            <li>AP count for the site</li>
+        </ul>
+        This cached data is derived from your Virtual Controller responses and stored locally to reduce API calls and improve app performance.
+    </li>
+    <li><strong>IEEE OUI database cache:</strong> Downloaded manufacturer identification databases (see Network Communication section)</li>
+    <li><strong>AP compatibility matrix cache:</strong> A downloaded copy of the AP hardware compatibility database (see Network Communication section)</li>
+</ul>
+<p><strong>Important:</strong> All of this data is stored exclusively on your device. It never leaves your device and is not accessible to the developer or any third party. Deleting a site from the app removes all associated data including any AP coordinates you entered. Deleting the app removes everything.</p>
+
+<h2>Network Communication</h2>
+
+<h3>Aruba Virtual Controller (Local Network)</h3>
+<p>NoCentral communicates with your Aruba Virtual Controller over your local network:</p>
+<ul>
+    <li>All communication occurs via HTTPS to your VC IP address on port 4343</li>
+    <li>Data is transmitted only between your device and your Virtual Controller</li>
+    <li>No network data is sent to external servers or third parties</li>
+</ul>
+
+<h3>IEEE OUI Database Downloads (Internet)</h3>
+<p>NoCentral downloads public IEEE OUI (Organizationally Unique Identifier) databases to identify device manufacturers from MAC addresses:</p>
+<ul>
+    <li><strong>Sources:</strong>
+        <ul>
+            <li><code>https://standards-oui.ieee.org/oui/oui.txt</code> (MA-L, 6-char prefixes, ~38K entries)</li>
+            <li><code>https://standards-oui.ieee.org/oui28/mam.txt</code> (MA-M, 7-char prefixes, ~5K entries)</li>
+            <li><code>https://standards-oui.ieee.org/oui36/oui36.txt</code> (MA-S, 9-char prefixes, ~6K entries)</li>
+        </ul>
+    </li>
+    <li><strong>Frequency:</strong> Weekly automatic updates</li>
+    <li><strong>Data transmitted:</strong> Standard HTTPS GET requests only — no user data, device identifiers, or MAC addresses from your network are sent</li>
+    <li><strong>Storage:</strong> Downloaded databases are cached locally in the app's documents directory</li>
+    <li><strong>Usage:</strong> Manufacturer lookups are performed entirely offline using the cached databases</li>
+</ul>
+<p><strong>Important:</strong> No MAC addresses from your network are ever transmitted to IEEE or any external service. The OUI databases are public reference data downloaded once and cached for offline use. Your network data stays on your device.</p>
+
+<h3>AP Compatibility Matrix (Internet)</h3>
+<p>NoCentral downloads an AP hardware compatibility matrix from this support site to keep firmware compatibility data current:</p>
+<ul>
+    <li><strong>Source:</strong> <code>https://bradleyjim.github.io/nocentral-support/ap-capability-matrix.json</code></li>
+    <li><strong>Frequency:</strong> Once per app launch, only if a newer version is available</li>
+    <li><strong>Data transmitted:</strong> Standard HTTPS GET request only — no user data, device identifiers, network information, or credentials are sent</li>
+    <li><strong>Storage:</strong> The matrix is cached locally in the app's documents directory</li>
+    <li><strong>Usage:</strong> Used offline to display firmware support ranges and flag constrained AP models in the Upgrade Planner</li>
+</ul>
+<p><strong>Important:</strong> This request contains no information about you, your network, or your devices. It is equivalent to downloading a public JSON file from a website.</p>
+
+<h3>No Analytics or Tracking</h3>
+<p>NoCentral does not use:</p>
+<ul>
+    <li>Analytics services (Google Analytics, Firebase, etc.)</li>
+    <li>Crash reporting services (Crashlytics, Sentry, etc.)</li>
+    <li>Advertising networks or trackers</li>
+    <li>Third-party SDKs that collect data</li>
+</ul>
+
+<h2>Location Data</h2>
+
+<h3>Device Location Access</h3>
+<p>NoCentral may request access to your device's location services for the following <strong>optional</strong> feature:</p>
+<ul>
+    <li><strong>Map centering:</strong> When you use the AP placement map feature, the app may request your current location to center the map on your position for convenience</li>
+    <li><strong>Frequency:</strong> Only when you open the map feature</li>
+    <li><strong>Storage:</strong> Your device location is <strong>never stored</strong> — it's used only to center the map and then discarded immediately</li>
+    <li><strong>Transmission:</strong> Your device location is <strong>never transmitted</strong> to any server or third party</li>
+</ul>
+
+<h3>iOS</h3>
+<p>On iOS, the app prompts for location permission when you open the map feature. You can deny this in iOS Settings → NoCentral → Location. If denied, the map will center on the approximate center of the continental United States instead. The app functions normally without location access.</p>
+
+<h3>macOS</h3>
+<p>The native macOS app does not request location access. The map centers on the continental United States until you manually pan or zoom.</p>
+<p>On Apple Silicon Macs, if you have installed the iOS version of NoCentral from the App Store, macOS may prompt for location permission depending on your system configuration. If this occurs and you grant access, macOS determines your position using available network signals rather than GPS hardware — location is used only to center the map and is never stored or transmitted. You can revoke this at any time in System Settings → Privacy &amp; Security → Location Services → NoCentral.</p>
+
+<h3>AP Placement Coordinates (User-Entered)</h3>
+<p>When you use the "Place APs" feature to manually mark AP locations on the map:</p>
+<ul>
+    <li>You tap the map to place each AP at its physical installation location</li>
+    <li>These coordinates (latitude/longitude) are stored <strong>only on your device</strong></li>
+    <li>The app calculates an approximate center point of all placed APs for RF propagation visualization</li>
+    <li>This center point is also stored <strong>only on your device</strong></li>
+    <li><strong>None of these coordinates are ever transmitted</strong> to any server or third party</li>
+</ul>
+
+<h2>Data Security</h2>
+
+<h3>Credential Storage</h3>
+<p>All Virtual Controller credentials are stored using Apple's Keychain Services:</p>
+<ul>
+    <li>Passwords are encrypted by the operating system</li>
+    <li>Credentials are protected by your device passcode/biometric authentication</li>
+    <li>Keychain data is backed up to iCloud Keychain (if enabled) using Apple's end-to-end encryption</li>
+    <li>The developer cannot access your credentials</li>
+</ul>
+
+<h3>Network Security</h3>
+<p>Communication with your Virtual Controller:</p>
+<ul>
+    <li>Uses HTTPS with TLS encryption</li>
+    <li>Accepts self-signed certificates (common for local network devices)</li>
+    <li>Does not validate certificates against public Certificate Authorities (by design for local use)</li>
+</ul>
+
+<h2>Third-Party Services</h2>
+
+<h3>IEEE Standards Organization</h3>
+<p>NoCentral downloads public manufacturer databases from the IEEE Standards Association:</p>
+<ul>
+    <li><strong>Service:</strong> IEEE Standards Association (<code>standards-oui.ieee.org</code>)</li>
+    <li><strong>Purpose:</strong> Download publicly available OUI/manufacturer reference databases</li>
+    <li><strong>Data transmitted:</strong> Standard HTTPS GET requests only (no personal data, no device identifiers, no MAC addresses from your network)</li>
+    <li><strong>Frequency:</strong> Weekly automatic updates</li>
+    <li><strong>Privacy impact:</strong> None — this is equivalent to downloading a public file from a website</li>
+</ul>
+
+<h3>NoCentral Support Site (GitHub Pages)</h3>
+<p>NoCentral fetches an AP hardware compatibility matrix from the developer's support site:</p>
+<ul>
+    <li><strong>Service:</strong> GitHub Pages (<code>bradleyjim.github.io</code>), hosted by GitHub, Inc.</li>
+    <li><strong>Purpose:</strong> Download the current AP firmware compatibility matrix for use in the Upgrade Planner feature</li>
+    <li><strong>Data transmitted:</strong> Standard HTTPS GET request only (no personal data, no device identifiers, no network information)</li>
+    <li><strong>Frequency:</strong> Once per app launch, only when a newer matrix version is available</li>
+    <li><strong>Privacy impact:</strong> None beyond a standard web request. GitHub's own privacy policy applies to their server logs: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank">GitHub Privacy Statement</a></li>
+</ul>
+
+<h3>No Other Third-Party Services</h3>
+<p>NoCentral does not integrate with or transmit data to any other third-party services, including:</p>
+<ul>
+    <li>Cloud storage providers</li>
+    <li>Analytics platforms</li>
+    <li>Advertising networks</li>
+    <li>Social media platforms</li>
+    <li>Email services</li>
+</ul>
+
+<h2>Data Sharing</h2>
+
+<p>We do not share, sell, rent, or trade any data with third parties because we do not collect any data.</p>
+
+<h2>Children's Privacy</h2>
+
+<p>NoCentral is not directed to individuals under the age of 13. We do not knowingly collect personal information from children. The app is designed for network administrators and IT professionals.</p>
+
+<h2>Your Rights</h2>
+
+<h3>Data Access and Deletion</h3>
+<p>Since all data is stored locally on your device:</p>
+<ul>
+    <li><strong>Access:</strong> You have full access to your data through the app's interface</li>
+    <li><strong>Deletion:</strong> Delete individual sites within the app to remove all associated data (including AP coordinates), or delete the app entirely to remove everything</li>
+    <li><strong>Export:</strong> Data can be exported from within the app (site configurations, reports)</li>
+    <li><strong>Location permissions:</strong> Manage in iOS Settings → NoCentral → Location (iOS), or System Settings → Privacy &amp; Security → Location Services → NoCentral (macOS, if prompted)</li>
+</ul>
+
+<h3>No Data Portability Issues</h3>
+<p>Because no data is stored on external servers, there are no data portability concerns. Your data belongs to you and stays on your device.</p>
+
+<h2>California Privacy Rights (CCPA)</h2>
+
+<p>Under the California Consumer Privacy Act (CCPA), California residents have certain rights. However, since NoCentral does not collect any personal information (device location is accessed but not stored or transmitted), these rights do not meaningfully apply. We have no personal data to disclose, delete, or opt-out from selling.</p>
+
+<h2>European Privacy Rights (GDPR)</h2>
+
+<p>Under the General Data Protection Regulation (GDPR), EU residents have certain rights regarding their personal data. Since NoCentral accesses device location but does not store or transmit it, and all other data remains local to your device, GDPR's primary obligations do not apply to our app's operation. You maintain full control over all data through iOS settings and the app interface.</p>
+
+<h2>Changes to This Privacy Policy</h2>
+
+<p>We may update this privacy policy from time to time. Any changes will be posted at this URL with an updated "Last Updated" date. Continued use of the app after changes constitutes acceptance of the updated policy.</p>
+
+<p>Material changes will be reflected in the app version notes on the App Store.</p>
+
+<h2>Contact</h2>
+
+<p>If you have questions about this privacy policy, contact:</p>
+<p><strong>Email:</strong> <a href="mailto:bradley.jim@gmail.com">bradley.jim@gmail.com</a></p>
+
+<hr>
+
+<p style="color: #666; font-size: 0.9em; margin-top: 40px;">
+    <strong>NoCentral</strong> is developed independently and is not affiliated with, endorsed by, or sponsored by HPE, Aruba Networks, or any of their subsidiaries.<br>
+    Aruba and Aruba Networks are registered trademarks of Hewlett Packard Enterprise.<br>
+    IEEE is a registered trademark of the Institute of Electrical and Electronics Engineers, Inc.
+</p>
+
+</body>
+</html>

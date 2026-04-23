@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoCentral Support</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #333;
+        }
+        h1 { color: #1a1a1a; }
+        h2 { color: #2a2a2a; margin-top: 30px; }
+        h3 { color: #444; margin-top: 20px; }
+        .notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 16px;
+            margin: 20px 0;
+        }
+        .important {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 12px 16px;
+            margin: 20px 0;
+        }
+        .tip {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 12px 16px;
+            margin: 20px 0;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<h1>NoCentral Support</h1>
+
+<p><strong>Last Updated:</strong> April 23, 2026</p>
+
+<div class="notice">
+    <strong>Note:</strong> NoCentral is developed and maintained by a single network engineer as a side project. Support is provided on a best-effort basis with no guaranteed response time.
+</div>
+
+<h2>Contact</h2>
+<p><strong>Email:</strong> <a href="mailto:bradley.jim@gmail.com">bradley.jim@gmail.com</a><br>
+<strong>Typical response time:</strong> 1–2 weeks for non-critical issues<br>
+<strong>Priority:</strong> Critical bugs affecting core functionality first, then everything else</p>
+
+<h2>Before Contacting Support</h2>
+<p>Please verify the following first:</p>
+<ul>
+    <li>Aruba IAP cluster is running AOS 8 (versions 8.10–8.13) — check with <code>show version</code></li>
+    <li>Your AP model is AP-3xx, AP-5xx, or AP-6xx series</li>
+    <li>REST API is enabled on your Virtual Controller (<code>allow-rest-api</code> + <code>commit apply</code>)</li>
+    <li>You can reach the VC IP from your iOS/macOS device on port 4343 (HTTPS)</li>
+    <li>Your credentials work via the VC web interface first</li>
+</ul>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>What devices are supported?</h3>
+<p>iOS 16+ and macOS Tahoe 26.3.1 or later.</p>
+
+<h3>What's the oldest device NoCentral runs on?</h3>
+<p>NoCentral targets iOS 16 and macOS Tahoe 26.3.1 as its minimum, which covers iOS devices back to roughly 2015 — including the first-generation iPad Pro 12.9" and iPhone 6s. The app is network-bound rather than CPU-bound, which means older hardware isn't materially slower than current hardware.</p>
+<p>For reference, a full load of ~170 API calls against a production cluster of 11 AP's with 110 clients takes:</p>
+<ul>
+    <li>22–26 seconds on a 2015 iPad Pro (A9X)</li>
+    <li>18–22 seconds on an iPhone X (A11)</li>
+    <li>18–22 seconds on an iPhone 15 (A16)</li>
+</ul>
+<p>If you have older hardware sitting unused — an old iPad in a drawer, a spare iPhone — it's a perfectly viable dedicated NoCentral device. A cheap eBay purchase of a first-generation iPad Pro is enough to run the app indefinitely.</p>
+
+<h3>Does this work with HPE InstantOn?</h3>
+<p>No. NoCentral only works with Aruba IAP clusters running AOS 8 (versions 8.10–8.13). HPE InstantOn uses a completely different infrastructure and is not supported.</p>
+
+<h3>Does this work with Campus Controllers or Mobility Conductors?</h3>
+<p>Not yet. The current version supports Aruba Instant APs (IAP) only. Campus Controller support is potentially planned for a future release with no ETA.</p>
+
+<h3>Do I need an Aruba Central subscription?</h3>
+<p>No. NoCentral connects directly to your Virtual Controller over your local network and has no cloud dependencies. It works with both locally-managed and Central-managed clusters.</p>
+
+<h3>How do I connect to my Virtual Controller?</h3>
+<p>Enter your VC's IP address, username, and password. NoCentral stores credentials securely in your system Keychain.</p>
+
+<h3>Why do some tabs return errors if I tap them too quickly after login?</h3>
+<p>NoCentral uses a centralised background API handler to load your site's data. When you log in, it orders and rate-limits a sequence of calls to the Virtual Controller — clients, APs, channel quality, RF neighbours, deny list, session details — so the VC isn't hit with parallel requests.</p>
+<p>The <strong>tab icons along the bottom of the screen are the progress indicator</strong>. They start dim and brighten as each tab's data arrives. Once every tab icon is lit, the initial load is complete.</p>
+<p>Tabs are allowed to reprioritise the API flow — tapping a tab tells the handler to jump that tab's data to the front of the queue. This is intentional and is what makes navigation feel responsive once the app is warmed up. During the <em>initial</em> load, however, it can interrupt the ordered sequence and cause one or more API calls to fail.</p>
+<p>You will know this has happened if you see:</p>
+<ul>
+    <li>A rapid <strong>"brrrrrp"</strong> burst of haptic feedback</li>
+    <li>The <strong>system tab error counter turning red</strong></li>
+    <li>Missing or incomplete data on one or more tabs</li>
+</ul>
+<div class="tip">
+    <strong>The fix:</strong> wait for all tab icons to brighten before tapping around. On a typical site this takes only a few seconds. Once the initial load is done, switching tabs and letting them reprioritise the queue works exactly as designed.
+</div>
+<p>If you have already triggered the error state, pull to refresh on any tab — or log out and back in — to restart a clean load sequence.</p>
+
+<h3>How accurate is RF Location?</h3>
+<p>RF Location is a <strong>probability estimator, not a precision locator</strong>. It does not put a pin on a neighbour AP or client the way GPS would. For each detected RF neighbour, it takes the RSSI values reported by your own APs and computes a range of likely distances and directions — a probable <em>area</em>, with a minimum and maximum bound, rather than a coordinate.</p>
+<p>All results are derived entirely from data returned by the installed, online, and responding APs. NoCentral has no other source of truth. Where multiple APs hear the same neighbour, their probability rings overlap; where the overlaps are tight, the estimate is tighter. Where they are loose, so is the answer.</p>
+
+<h4>What makes estimates better or worse</h4>
+<p>Accuracy depends almost entirely on your AP deployment, not on the app. Estimates improve when:</p>
+<ul>
+    <li><strong>More APs hear the same neighbour</strong> — two APs give a rough line, three or more begin to give a meaningful area</li>
+    <li><strong>Those APs are physically separated</strong> — neighbours heard only by APs clustered in one part of the building cannot be triangulated meaningfully, regardless of signal strength</li>
+    <li><strong>APs are installed uniformly</strong> — similar model family, similar mounting height, similar orientation. Mixed hardware and mixed mounting (ceiling vs. wall vs. desk vs. inside a closet) breaks the path-loss assumptions the calculation relies on</li>
+</ul>
+<p>Most real-world installations were designed for <strong>client coverage</strong>, not RF geolocation. APs are commonly placed for convenient cable runs, mounted behind obstructions, oriented inconsistently, or spaced unevenly. All of this is perfectly fine for serving Wi-Fi, and all of it reduces the precision of RF Location results. Expect your own site to fall into this category — it is the norm, not the exception.</p>
+
+<h4>How to read the results</h4>
+<p>Treat probability areas as <em>"this neighbour is more likely here than there,"</em> not as a fixed pin. A tight, well-defined peak means the geometry of your install happened to work in your favour for that particular neighbour. A broad, fuzzy area means the data simply does not support a tighter answer, and no amount of computation will change that.</p>
+<div class="tip">
+    <strong>Best use:</strong> RF Location is most useful for narrowing a search — pointing you in the right general direction — before walking the area with a handheld scanner to pin down the exact source.
+</div>
+
+<h3>Does NoCentral access my location on macOS?</h3>
+<p>The native macOS app does not request location access. The RF Location map centers on the continental United States until you manually pan or zoom.</p>
+<p>On Apple Silicon Macs, if you have installed the iOS version of NoCentral from the App Store, macOS may prompt for location permission depending on your system configuration. If this occurs, location is determined by macOS using available network signals — not GPS hardware — and is used only to center the map. It is never stored or transmitted. You can revoke access at any time in System Settings → Privacy &amp; Security → Location Services → NoCentral.</p>
+
+<h3>What does the amber warning triangle on an AP card mean?</h3>
+<p>An amber triangle indicates a <strong>constrained AP model</strong> — one with a known firmware ceiling below the final AOS 8 release (8.13). The AP is not broken or offline; it simply cannot run firmware above its supported maximum train.</p>
+<p>Tap the AP card to open its detail view. The <strong>Version Support</strong> section shows the exact minimum and maximum supported firmware versions for that model. If your cluster is running firmware within that range, the AP is fully operational. If you are planning a firmware upgrade, check the <strong>Upgrade Planner</strong> tab first.</p>
+
+<h3>What is the Upgrade Planner?</h3>
+<p>The <strong>Upgrade</strong> tab helps you understand the impact of a firmware upgrade on your AP fleet before you commit to it.</p>
+<ul>
+    <li><strong>Current State</strong> — shows how many APs in your cluster have known firmware constraints</li>
+    <li><strong>Firmware Upgrade Simulator</strong> — select a target firmware train (8.10, 8.11, 8.12, or 8.13) and see immediately which APs would remain supported and which would not</li>
+    <li><strong>Remediation Options</strong> — for any AP that cannot support the selected train, three options are outlined: replace it with a compatible model, isolate it on a separate cluster running a supported firmware train, or retire and remove it from the allowed-AP list</li>
+</ul>
+<p>The compatibility data is bundled with the app and updated automatically in the background when a newer version is available.</p>
+
+<h3>What is the Offline Clients section in the Clients tab?</h3>
+<p>NoCentral keeps a record of wireless clients it has seen connected to your cluster. Clients that were previously online but are no longer present appear in an <strong>Offline</strong> section at the bottom of the Clients tab, showing when they were last seen, which AP they were connected to, and which SSID they used.</p>
+<p>This is useful for tracking down devices that have left the network, investigating whether a specific device has ever connected, or identifying stale entries that are no longer relevant.</p>
+<ul>
+    <li>Client history is stored only on your device and never transmitted</li>
+    <li>The retention period is configurable in <strong>Settings → Client History</strong> (default 90 days)</li>
+    <li>Individual entries can be deleted by swiping left on iOS, or via the context menu on macOS</li>
+    <li>All offline clients for a site can be cleared at once from the section header menu</li>
+</ul>
+
+<h2>Common Issues</h2>
+
+<h3>Can't connect to Virtual Controller</h3>
+<ul>
+    <li>Verify REST API is enabled: <code>allow-rest-api</code> then <code>commit apply</code></li>
+    <li>Check that the VC IP is reachable on port 4343 (HTTPS)</li>
+    <li>Self-signed certificates are handled automatically — no manual trust needed</li>
+    <li>Ensure you're connecting to the master IAP (look for * next to the IP in <code>show aps</code>)</li>
+</ul>
+
+<h3>Login fails with correct credentials</h3>
+<ul>
+    <li>Test credentials via the VC web UI first (https://VC-IP:4343)</li>
+    <li>Sessions expire after 15 minutes of inactivity — try logging in again</li>
+    <li>If you recently changed the password, delete and re-add the site in NoCentral</li>
+</ul>
+
+<h3>Missing APs or incomplete data</h3>
+<ul>
+    <li>Connect to the VC IAP, not a member AP</li>
+    <li>During cluster elections, some data may be temporarily unavailable — retry after a minute</li>
+    <li>Offline APs will not show real-time stats</li>
+</ul>
+
+<h3>App crashes or freezes</h3>
+<ul>
+    <li>Force quit and restart the app</li>
+    <li>Verify your iOS/macOS version meets the minimum requirements</li>
+    <li>Very large clusters (100+ APs) may experience slower load times</li>
+</ul>
+
+<h3>Load failures, stalls, incomplete data, or API errors — adjusting the API call gap</h3>
+
+<p>NoCentral queries the Virtual Controller with a sequence of API calls during each load. The VC handles these calls one at a time, and on some clusters it can struggle to keep up, resulting in:</p>
+<ul>
+    <li>API errors appearing in <strong>Settings → Advanced Tuning → Error Log</strong></li>
+    <li>The loading bar stalling or stopping before completion</li>
+    <li>Incomplete data — missing APs, clients, or radio statistics after a load</li>
+    <li>In rare cases, the app becoming unresponsive and requiring a force quit</li>
+</ul>
+
+<p>All of these symptoms can indicate the VC is not keeping up with the rate of API requests. The fix is to introduce a deliberate pause between calls.</p>
+
+<div class="tip">
+    <strong>Where to find it:</strong> Settings → Advanced Tuning → API Call Gap. The slider adjusts the delay between API calls from 0ms to 150ms and is saved per site.
+</div>
+
+<h4>Default values</h4>
+<ul>
+    <li><strong>0ms</strong> — default for standard (non-Central-managed) clusters. Tested clean on well-specified hardware.</li>
+    <li><strong>50ms</strong> — automatically applied for Aruba Central-managed clusters, which carry additional overhead from the Central management plane.</li>
+</ul>
+
+<h4>Suggested approach</h4>
+<p>If you are seeing any of the symptoms above, increase the gap incrementally and retry until the load completes cleanly:</p>
+<ol>
+    <li>Try <strong>50ms</strong> first</li>
+    <li>If still failing, increase to <strong>100ms</strong></li>
+    <li>If still failing, increase to <strong>150ms</strong> (maximum)</li>
+</ol>
+<p>Use the lowest value that works reliably for your cluster. There is no universally correct setting — the right value depends on your specific hardware and cluster size.</p>
+
+<h4>Why some clusters need a larger gap</h4>
+<p>The Virtual Controller runs on the same hardware as one of your APs. The processing power of the VC AP directly affects how quickly it can respond to API requests. A cluster where the VC role is held by an older, lower-powered model (such as an AP-303) has significantly less headroom than one running on a current high-performance model (such as an AP-555). Larger clusters amplify this, as there is more data for the VC to process and return.</p>
+
+<div class="notice">
+    <strong>Note:</strong> This is based on observed behaviour across a small number of test environments, not formally documented Aruba specifications. HPE Aruba's own guidance recommends IAP VC clusters do not exceed 128 APs in a single L2 cluster due to general performance constraints — NoCentral's API load is one additional factor within that broader picture. Use whatever value works reliably for your environment.
+</div>
+
+<h3>Intermittent failures on Aruba Central-managed clusters</h3>
+
+<p>On clusters enrolled in Aruba Central, NoCentral may experience connection failures, API errors, or incomplete loads that do not occur on locally-managed clusters. These are conditions of the Virtual Controller itself — not a NoCentral issue.</p>
+
+<h4>Why Central-managed clusters are more susceptible</h4>
+<p>The Virtual Controller runs on the same physical hardware as one of your APs. When a cluster is enrolled in Central, the VC AP handles Central's management plane on top of its normal cluster duties — configuration syncs, telemetry, subscription state, and more. On lower-powered hardware, this leaves less headroom for local REST API requests. NoCentral automatically applies a 50ms API call gap on Central-managed clusters to reduce this pressure, but it cannot eliminate the underlying constraint.</p>
+
+<h4>When Central itself has a problem</h4>
+<p>More significant failures can occur when Central encounters an issue — for example, when a subscription lapses or when connectivity between the VC and Central is disrupted. In these conditions, the VC can oscillate between locally-managed and Central-managed modes while attempting to resolve its state. During this period the VC may be unresponsive to local REST API requests for extended periods, regardless of the API call gap setting.</p>
+<p>Other events that place high CPU or memory demand on the VC — such as large configuration commits or periods of high client authentication volume — can produce similar symptoms.</p>
+
+<div class="notice">
+    <strong>Note:</strong> When the VC is occupied by Central workload or fault conditions, NoCentral will time out, stall, or return errors. This is expected behaviour — NoCentral cannot compensate for a VC that cannot respond to local API requests. Check your Aruba Central portal for alerts, subscription status, or active operations before concluding there is an app-level issue.
+</div>
+
+<h4>What to do</h4>
+<ul>
+    <li>Check Aruba Central for alerts, subscription status, or active configuration changes</li>
+    <li>If Central appears healthy, try increasing the API call gap (Settings → Advanced Tuning → API Call Gap) and retry</li>
+    <li>If the cluster is mid-sync or processing a large config commit, wait and retry</li>
+    <li>If the issue persists with Central healthy, the problem is likely at the VC or cluster level and requires investigation there</li>
+</ul>
+
+<h2>Known Limitations</h2>
+
+<div class="important">
+    <strong>Triband APs:</strong> AP-6xx series with three radios currently only show radio0 and radio1 statistics. Radio2 support is not yet implemented — no AP-6xx hardware is available for development testing.
+</div>
+
+<ul>
+    <li>Large clusters may load slowly — the app is querying the VC for every AP and client in sequence</li>
+    <li>Campus Controllers: not supported (IAP only)</li>
+    <li>Mobility Conductors: not supported (IAP only)</li>
+    <li>AP compatibility matrix covers most AP-3xx and AP-5xx models. Coverage for very new or discontinued models may be incomplete.</li>
+    <li>At the time of writing, AOS 8.13 is the final major version of AOS 8 — future development and compatibility depends on HPE Aruba.</li>
+</ul>
+
+<h2>Bug Reports &amp; Feature Requests</h2>
+
+<h3>Reporting Bugs</h3>
+<p>Email <a href="mailto:bradley.jim@gmail.com">bradley.jim@gmail.com</a> with:</p>
+<ul>
+    <li>iOS/macOS version</li>
+    <li>Aruba IAP model and AOS version</li>
+    <li>Detailed steps to reproduce the issue</li>
+    <li>Screenshots if applicable</li>
+</ul>
+
+<h3>Feature Requests</h3>
+<p>Feature requests are noted but no timeline is guaranteed. Current roadmap priorities:</p>
+<ol>
+    <li>Bug fixes for existing features</li>
+    <li>Additional IAP features based on user feedback</li>
+    <li>Campus Controller support (possibly in the future, no ETA)</li>
+    <li>Aruba Central API support (possibly in the future, no ETA)</li>
+</ol>
+
+<h2>Refunds</h2>
+<p>For refund requests, contact Apple Support directly. App Store refund policy applies.</p>
+
+<hr>
+
+<p style="color: #666; font-size: 0.9em; margin-top: 40px;">
+    <strong>Privacy:</strong> NoCentral does not collect, store, or transmit your personal data or network information. On iOS, and in some configurations on Apple Silicon Macs, the app may request your device location to center the map feature (optional, never stored or transmitted). The app downloads a public AP compatibility database from this support site — no personal data is transmitted. All credentials are stored locally in your device's Keychain. See our <a href="privacy.html">Privacy Policy</a> for full details.<br>
+    <strong>Last updated:</strong> April 2026
+</p>
+
+</body>
+</html>
